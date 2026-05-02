@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { View } from "react-native";
 
 export default function TabLayout() {
   return (
@@ -28,8 +29,26 @@ export default function TabLayout() {
         name="add"
         options={{
           title: "Add",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="add-circle" size={28} color={color} />
+          tabBarLabel: '',
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                width: 58,
+                height: 58,
+                borderRadius: 29,
+                backgroundColor: '#1D4ED8',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: -10,
+                shadowColor: '#000',
+                shadowOpacity: 0.18,
+                shadowRadius: 10,
+                shadowOffset: { width: 0, height: 6 },
+                elevation: 5,
+              }}
+            >
+              <Ionicons name="add" size={28} color="#fff" />
+            </View>
           ),
         }}
       />

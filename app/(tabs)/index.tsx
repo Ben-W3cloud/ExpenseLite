@@ -71,7 +71,7 @@ export default function HomeScreen() {
 
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Recent Transactions</Text>
-          <Link href="/(tabs)/list" style={styles.seeAllLink}>
+          <Link href="/(tabs)/expenses" style={styles.seeAllLink}>
             <Text style={styles.seeAllText}>See All</Text>
           </Link>
         </View>
