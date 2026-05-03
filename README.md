@@ -1,50 +1,152 @@
-# Welcome to your Expo app 👋
+# ExpenseLite 💰
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A lightweight, modern expense tracking application built with Expo and React Native. ExpenseLite provides a seamless cross-platform experience for managing your finances on iOS, Android, and the web.
 
-## Get started
+## 🎯 Overview
 
-1. Install dependencies
+ExpenseLite is a TypeScript-based mobile and web application designed to help users track their expenses efficiently. Built on the modern Expo framework with React Router for navigation, it delivers a smooth, intuitive user experience across all platforms.
 
-   ```bash
-   npm install
-   ```
+## 📁 Project Structure
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+ExpenseLite/
+├── app/                    # Main application screens and routes
+├── assets/                 # Images, icons, and static assets
+├── components/             # Reusable UI components
+├── constants/              # App-wide constants and configuration
+├── hooks/                  # Custom React hooks
+├── scripts/                # Utility scripts (e.g., reset-project)
+├── app.json               # Expo app configuration
+├── package.json           # Project dependencies
+├── tsconfig.json          # TypeScript configuration
+├── eslint.config.js       # ESLint linting rules
+└── README.md             # This file
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Directory Details
 
-## Learn more
+- **`app/`** - File-based routing using Expo Router. Define your app's screens and navigation structure here.
+- **`assets/`** - Contains images, icons, splash screens, and favicon for all platforms.
+- **`components/`** - Reusable UI components such as buttons, cards, modals, and forms.
+- **`constants/`** - Application-wide constants like colors, typography, API endpoints, and configuration values.
+- **`hooks/`** - Custom React hooks for shared logic, state management, and side effects.
+- **`scripts/`** - Helper scripts for project maintenance and setup.
 
-To learn more about developing your project with Expo, look at the following resources:
+## ✨ Key Features
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **Cross-Platform Support** - Runs on iOS, Android, and Web with a unified codebase
+- **File-Based Routing** - Built with Expo Router for intuitive navigation structure
+- **TypeScript** - Full TypeScript support for type safety and better developer experience
+- **Modern Dependencies** - Latest versions of React, React Native, and Expo ecosystem
+- **Navigation** - React Navigation with bottom tab support for seamless app navigation
+- **Icons & Assets** - Expo Vector Icons for beautiful, scalable iconography
+- **Web Support** - Static site generation for web deployment
+- **Responsive Design** - Gesture handling and safe area management for all screen sizes
 
-## Join the community
+## 🚀 Getting Started
 
-Join our community of developers creating universal apps.
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/Ben-W3cloud/ExpenseLite.git
+cd ExpenseLite
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Start the development server
+```bash
+npm start
+```
+
+### Running on Different Platforms
+
+- **iOS Simulator**
+```bash
+npm run ios
+```
+
+- **Android Emulator**
+```bash
+npm run android
+```
+
+- **Web Browser**
+```bash
+npm run web
+```
+
+## 📝 Available Scripts
+
+- `npm start` - Start the Expo development server
+- `npm run ios` - Launch the iOS simulator
+- `npm run android` - Launch the Android emulator
+- `npm run web` - Start the web development server
+- `npm run lint` - Run ESLint to check code quality
+- `npm run reset-project` - Reset to a fresh project template
+
+## 🛠️ Tech Stack
+
+- **Framework**: Expo + React Native 0.81
+- **Language**: TypeScript 5.9
+- **Navigation**: Expo Router & React Navigation
+- **State Management**: React Hooks
+- **UI Components**: Custom components + Expo Vector Icons
+- **Build Tool**: Expo
+- **Linting**: ESLint
+- **Animation**: React Native Reanimated 4
+
+## 🎨 Development Guidelines
+
+### Code Structure
+- Place reusable components in the `components/` directory
+- Create custom hooks in `hooks/` for shared logic
+- Store constants in `constants/` for easy maintenance
+- Define app screens in `app/` using file-based routing
+
+### Type Safety
+This project uses TypeScript. Ensure all new files include proper type annotations for better code quality and IDE support.
+
+### Linting
+Run the linter before committing code:
+```bash
+npm run lint
+```
+
+## 🌐 Platform Support
+
+- **iOS**: Optimized for iPhone and iPad
+- **Android**: Full support with adaptive icons
+- **Web**: Static site generation with responsive design
+
+## 📚 Learn More
+
+- [Expo Documentation](https://docs.expo.dev/)
+- [React Native Documentation](https://reactnative.dev/)
+- [Expo Router Guide](https://docs.expo.dev/router/introduction/)
+- [TypeScript Documentation](https://www.typescriptlang.org/)
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow the existing code style and run the linter before submitting pull requests.
+
+## 📄 License
+
+This project is open source and available on GitHub.
+
+## 🙋 Support
+
+For questions and support, please open an issue on the [GitHub repository](https://github.com/Ben-W3cloud/ExpenseLite).
+
+---
+
+Built with ❤️ using Expo and React Native
+```
