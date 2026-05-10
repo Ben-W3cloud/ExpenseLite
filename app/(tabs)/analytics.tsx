@@ -1,4 +1,5 @@
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 const legend = [
@@ -126,11 +127,11 @@ export default function AnalyticsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop:25,
     backgroundColor: '#F8FAFF',
   },
   contentContainer: {
     padding: 20,
-    paddingBottom: 36,
   },
   header: {
     flexDirection: 'row',
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
   },
   topCardsRow: {
     flexDirection: 'row',
-    gap: 14,
+    gap: 15,
     marginBottom: 20,
   },
   largeCard: {
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     borderRadius: 24,
-    padding: 20,
+    padding: 10,
     shadowColor: '#000',
     shadowOpacity: 0.05,
     shadowRadius: 10,
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '900',
     color: '#64748B',
     marginBottom: 12,
   },
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
   },
   cardValue: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: '900',
     color: '#1D4ED8',
   },
   cardChange: {
@@ -235,9 +236,9 @@ const styles = StyleSheet.create({
   topCategoryTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 5,
     paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingHorizontal: 6,
     borderRadius: 18,
     backgroundColor: '#EFF6FF',
   },
@@ -251,7 +252,7 @@ const styles = StyleSheet.create({
   },
   topCategoryText: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '900',
     color: '#0F172A',
   },
   chartCard: {

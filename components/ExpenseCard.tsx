@@ -44,7 +44,7 @@ export default function ExpenseCard({
 
       {/* Right */}
       <Text style={{ fontWeight: "700", fontSize: 16, }}>
-        ₦{amount.toLocaleString()}
+        ${amount.toLocaleString()}
       </Text>
     </View>
   );

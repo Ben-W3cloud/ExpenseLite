@@ -47,7 +47,7 @@ export default function TabLayout() {
                 elevation: 5,
               }}
             >
-              <Ionicons name="add" size={28} color="#fff" />
+              <Ionicons name="add" size={32} color="#fff" />
             </View>
           ),
         }}

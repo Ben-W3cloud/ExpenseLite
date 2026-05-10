@@ -8,7 +8,7 @@ type Props = {
 
 const categoryMap: Record<string, { icon: string; color: string }> = {
   food: { 
-    icon: "restaurant", // or "fastfood"
+    icon: "fastfood", // or "fastfood"
     color: "#FF8C42" 
   },
   transport: { 
@@ -24,11 +24,11 @@ const categoryMap: Record<string, { icon: string; color: string }> = {
     color: "#FF006E" 
   },
   health: { 
-    icon: "medical_services", // or "medication"
+    icon: "medication",
     color: "#2EC4B6" 
   },
   other: { 
-    icon: "medication", 
+    icon: "area-chart", 
     color: "#6C757D" 
   },
 };
@@ -43,7 +43,7 @@ export default function CategoryIcon({ category, size = 24 }: Props) {
         borderRadius: 12,
       }}
     >
-      <MaterialIcons icon={item.icon} size={size} color={item.color} />
+      <MaterialIcons name={item.icon as any} size={size} color={item.color} />
     </View>
   );
 }

@@ -15,7 +15,7 @@ const categories = [
   { key: 'transport', label: 'Transport' },
   { key: 'bills', label: 'Bills' },
   { key: 'shopping', label: 'Shopping' },
-  { key: 'entertainment', label: 'Entertainment' },
+  { key: 'other', label: 'Others' },
 ];
 
 const formatDateLabel = (date: Date) => {
@@ -140,6 +140,7 @@ export default function AddExpenseScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 23,
     backgroundColor: '#F8FAFF',
   },
   contentContainer: {
@@ -177,35 +178,35 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 20,
     paddingHorizontal: 24,
-    paddingVertical: 28,
-    marginBottom: 24,
+    paddingVertical: 10,
+    marginBottom: 25,
     shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
+    shadowOpacity: 1,
+    shadowRadius: 12,
+    elevation: 3,
   },
   currencySymbol: {
     fontSize: 32,
     color: '#1D4ED8',
     marginRight: 12,
-    paddingBottom: 8,
+    bottom:16,
   },
   amountInput: {
     flex: 1,
-    fontSize: 48,
+    fontSize: 32,
     fontWeight: '700',
     color: '#0F172A',
-    lineHeight: 56,
+    lineHeight: 50,
   },
   categoryRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
     marginBottom: 24,
+    gap:8,
   },
   categoryItem: {
-    width: 76,
-    height: 90,
+    width: 75,
+    height: 95,
     borderRadius: 18,
     backgroundColor: '#fff',
     alignItems: 'center',

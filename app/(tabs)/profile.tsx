@@ -13,99 +13,101 @@ export default function ProfileScreen() {
   const [darkMode, setDarkMode] = useState(false);
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.headerCard}>
-        <View style={styles.avatarWrapper}>
-          <View style={styles.avatarCircle}>
-            <Ionicons name="person" size={48} color="#1D4ED8" />
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.headerCard}>
+          <View style={styles.avatarWrapper}>
+            <View style={styles.avatarCircle}>
+              <Ionicons name="person" size={48} color="#1D4ED8" />
+            </View>
+            <TouchableOpacity style={styles.editBadge} activeOpacity={0.8}>
+              <Ionicons name="pencil" size={16} color="#fff" />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.editBadge} activeOpacity={0.8}>
-            <Ionicons name="pencil" size={16} color="#fff" />
+
+          <Text style={styles.profileName}>Alex Thompson</Text>
+          <Text style={styles.profileEmail}>alex.thompson@financialzen.com</Text>
+
+          <TouchableOpacity style={styles.editButton} activeOpacity={0.85}>
+            <Text style={styles.editButtonText}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.profileName}>Alex Thompson</Text>
-        <Text style={styles.profileEmail}>alex.thompson@financialzen.com</Text>
+        <View style={styles.preferenceCard}>
+          <Text style={styles.sectionTitle}>Preferences</Text>
 
-        <TouchableOpacity style={styles.editButton} activeOpacity={0.85}>
-          <Text style={styles.editButtonText}>Edit Profile</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity style={styles.preferenceRow} activeOpacity={0.8}>
+            <View style={[styles.preferenceIcon, { backgroundColor: '#E0F2FE' }]}> 
+              <Ionicons name="cash-outline" size={20} color="#1D4ED8" />
+            </View>
+            <View style={styles.preferenceText}>
+              <Text style={styles.preferenceTitle}>Currency</Text>
+              <Text style={styles.preferenceSubtitle}>Change your primary currency</Text>
+            </View>
+            <Text style={styles.preferenceValue}>USD</Text>
+            <Ionicons name="chevron-forward" size={18} color="#94A3B8" />
+          </TouchableOpacity>
 
-      <View style={styles.preferenceCard}>
-        <Text style={styles.sectionTitle}>Preferences</Text>
+          <View style={styles.preferenceRow}>
+            <View style={[styles.preferenceIcon, { backgroundColor: '#E2E8F0' }]}> 
+              <Ionicons name="moon-outline" size={20} color="#334155" />
+            </View>
+            <View style={styles.preferenceText}>
+              <Text style={styles.preferenceTitle}>Dark Mode</Text>
+              <Text style={styles.preferenceSubtitle}>Adjust visual appearance</Text>
+            </View>
+            <Switch
+              value={darkMode}
+              onValueChange={setDarkMode}
+              thumbColor={darkMode ? '#fff' : '#fff'}
+              trackColor={{ false: '#CBD5E1', true: '#1D4ED8' }}
+            />
+          </View>
 
-        <TouchableOpacity style={styles.preferenceRow} activeOpacity={0.8}>
-          <View style={[styles.preferenceIcon, { backgroundColor: '#E0F2FE' }]}> 
-            <Ionicons name="cash-outline" size={20} color="#1D4ED8" />
-          </View>
-          <View style={styles.preferenceText}>
-            <Text style={styles.preferenceTitle}>Currency</Text>
-            <Text style={styles.preferenceSubtitle}>Change your primary currency</Text>
-          </View>
-          <Text style={styles.preferenceValue}>USD</Text>
-          <Ionicons name="chevron-forward" size={18} color="#94A3B8" />
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.preferenceRow} activeOpacity={0.8}>
+            <View style={[styles.preferenceIcon, { backgroundColor: '#DCFCE7' }]}> 
+              <Ionicons name="information-circle-outline" size={20} color="#047857" />
+            </View>
+            <View style={styles.preferenceText}>
+              <Text style={styles.preferenceTitle}>About ExpenseLite</Text>
+              <Text style={styles.preferenceSubtitle}>v2.4.0 • Terms & Privacy</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color="#94A3B8" />
+          </TouchableOpacity>
 
-        <View style={styles.preferenceRow}>
-          <View style={[styles.preferenceIcon, { backgroundColor: '#E2E8F0' }]}> 
-            <Ionicons name="moon-outline" size={20} color="#334155" />
-          </View>
-          <View style={styles.preferenceText}>
-            <Text style={styles.preferenceTitle}>Dark Mode</Text>
-            <Text style={styles.preferenceSubtitle}>Adjust visual appearance</Text>
-          </View>
-          <Switch
-            value={darkMode}
-            onValueChange={setDarkMode}
-            thumbColor={darkMode ? '#fff' : '#fff'}
-            trackColor={{ false: '#CBD5E1', true: '#1D4ED8' }}
-          />
+          <TouchableOpacity style={styles.preferenceRow} activeOpacity={0.8}>
+            <View style={[styles.preferenceIcon, { backgroundColor: '#FEE2E2' }]}> 
+              <Ionicons name="alert-circle-outline" size={20} color="#DC2626" />
+            </View>
+            <View style={styles.preferenceText}>
+              <Text style={[styles.preferenceTitle, styles.dangerText]}>Reset Data</Text>
+              <Text style={[styles.preferenceSubtitle, styles.dangerText]}>Wipe all transactions and history</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color="#DC2626" />
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.preferenceRow} activeOpacity={0.8}>
-          <View style={[styles.preferenceIcon, { backgroundColor: '#DCFCE7' }]}> 
-            <Ionicons name="information-circle-outline" size={20} color="#047857" />
-          </View>
-          <View style={styles.preferenceText}>
-            <Text style={styles.preferenceTitle}>About ExpenseLite</Text>
-            <Text style={styles.preferenceSubtitle}>v2.4.0 • Terms & Privacy</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={18} color="#94A3B8" />
+        <TouchableOpacity style={styles.logoutButton} activeOpacity={0.85}>
+          <Ionicons name="log-out-outline" size={18} color="#1D4ED8" />
+          <Text style={styles.logoutButtonText}>Logout from Account</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.preferenceRow} activeOpacity={0.8}>
-          <View style={[styles.preferenceIcon, { backgroundColor: '#FEE2E2' }]}> 
-            <Ionicons name="alert-circle-outline" size={20} color="#DC2626" />
-          </View>
-          <View style={styles.preferenceText}>
-            <Text style={[styles.preferenceTitle, styles.dangerText]}>Reset Data</Text>
-            <Text style={[styles.preferenceSubtitle, styles.dangerText]}>Wipe all transactions and history</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={18} color="#DC2626" />
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.logoutButton} activeOpacity={0.85}>
-        <Ionicons name="log-out-outline" size={18} color="#1D4ED8" />
-        <Text style={styles.logoutButtonText}>Logout from Account</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 23,
     backgroundColor: '#F8FAFF',
   },
   contentContainer: {
     padding: 20,
-    paddingBottom: 36,
   },
   headerCard: {
     backgroundColor: '#fff',

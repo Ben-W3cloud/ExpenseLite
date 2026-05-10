@@ -42,7 +42,7 @@ const sampleTransactions: Transaction[] = [
   {
     id: '1',
     name: 'Blueberry Cafe',
-    category: 'food',
+    category: 'restaurant',
     amount: 24.5,
     date: new Date(2025, 9, 24, 12, 45),
     type: 'expense',
@@ -59,7 +59,7 @@ const sampleTransactions: Transaction[] = [
   {
     id: '3',
     name: 'Salary Deposit',
-    category: 'income',
+    category: 'bills',
     amount: 2500.0,
     date: new Date(2025, 9, 23, 4, 30),
     type: 'income',
@@ -67,7 +67,7 @@ const sampleTransactions: Transaction[] = [
   {
     id: '4',
     name: 'Amazon Prime',
-    category: 'shopping',
+    category: 'fastfood',
     amount: 50.0,
     date: new Date(2025, 9, 23, 11, 20),
     type: 'expense',
@@ -76,7 +76,7 @@ const sampleTransactions: Transaction[] = [
   {
     id: '5',
     name: 'Uber Trip',
-    category: 'transport',
+    category: 'bills',
     amount: 35.2,
     date: new Date(2025, 9, 22, 8, 45),
     type: 'expense',
@@ -239,7 +239,7 @@ export default function ExpensesScreen() {
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionLabel}>{section.label}</Text>
         <Text style={[styles.sectionTotal, { color: totalColor }]}>
-          {totalSign}₦{Math.abs(section.total).toLocaleString()}
+          {totalSign}${Math.abs(section.total).toLocaleString()}
         </Text>
       </View>
     );
@@ -349,6 +349,7 @@ export default function ExpensesScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 25,
     flex: 1,
     backgroundColor: '#F8FAFF',
   },
@@ -361,7 +362,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   headerTitle: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: '700',
     color: '#0F172A',
   },

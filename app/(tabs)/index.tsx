@@ -2,12 +2,13 @@ import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import ExpenseCard from '@/components/ExpenseCard';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const transactions = [
-  { category: 'Coffee', note: 'Starbucks', amount: 12.45, date: 'Oct 24' },
-  { category: 'Transport', note: 'Gas', amount: 54.0, date: 'Oct 23' },
-  { category: 'Groceries', note: 'Whole Foods', amount: 124.8, date: 'Oct 22' },
-  { category: 'Entertainment', note: 'Netflix', amount: 15.99, date: 'Oct 20' },
+  { category: 'food', note: 'Starbucks', amount: 12.45, date: 'Oct 24' },
+  { category: 'other', note: 'Gas', amount: 54.0, date: 'Oct 23' },
+  { category: 'health', note: 'Hospital', amount: 124.8, date: 'Oct 22' },
+  { category: 'bills', note: 'Netflix', amount: 15.99, date: 'Oct 20' },
 ];
 
 export default function HomeScreen() {
@@ -95,12 +96,11 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop:25,
     backgroundColor: '#F8FAFF',
   },
   contentContainer: {
-    paddingTop: 24,
-    paddingBottom: 36,
-    paddingHorizontal: 20,
+    padding: 20,
   },
   header: {
     flexDirection: 'row',
@@ -111,25 +111,25 @@ const styles = StyleSheet.create({
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 15,
   },
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: 50,
+    height: 50,
+    borderRadius: 18,
     backgroundColor: '#E0E7FF',
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
     color: '#1D4ED8',
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 25,
+    fontWeight: '900',
   },
   greeting: {
     color: '#0F172A',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '900',
   },
   subTitle: {
     color: '#64748B',
