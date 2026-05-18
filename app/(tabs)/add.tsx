@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import CategoryIcon from '@/components/CategoryIcon';
+import { useTheme } from '@/context/ThemeContext';
+import { colors } from '@/constants/theme';
 
 const categories = [
   { key: 'food', label: 'Food' },
@@ -44,6 +46,9 @@ const formatDateLabel = (date: Date) => {
 };
 
 export default function AddExpenseScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const [amount, setAmount] = useState('0.00');
   const [category, setCategory] = useState('food');
   const [note, setNote] = useState('');
@@ -57,10 +62,10 @@ export default function AddExpenseScreen() {
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.topRow}>
-        <Ionicons name="chevron-back" size={24} color="#1D4ED8" />
+        <Ionicons name="chevron-back" size={24} color={theme.primary} />
         <Text style={styles.screenTitle}>Add Expense</Text>
         <View style={styles.avatarPlaceholder}>
-          <Ionicons name="person-circle" size={32} color="#1D4ED8" />
+          <Ionicons name="person-circle" size={32} color={theme.primary} />
         </View>
       </View>
 
@@ -74,7 +79,7 @@ export default function AddExpenseScreen() {
           keyboardType="numeric"
           style={styles.amountInput}
           placeholder="0.00"
-          placeholderTextColor="#CBD5E1"
+          placeholderTextColor={theme.textSecondary}
         />
       </View>
 
@@ -101,17 +106,17 @@ export default function AddExpenseScreen() {
       <Text style={styles.sectionHeading}>Transaction Date</Text>
       <TouchableOpacity style={styles.datePicker} activeOpacity={0.8}>
         <View style={styles.dateIconWrapper}>
-          <Ionicons name="calendar-outline" size={18} color="#1D4ED8" />
+          <Ionicons name="calendar-outline" size={18} color={theme.primary} />
         </View>
         <Text style={styles.dateLabel}>{formatDateLabel(transactionDate)}</Text>
-        <Ionicons name="chevron-down" size={20} color="#94A3B8" />
+        <Ionicons name="chevron-down" size={20} color={theme.textSecondary} />
       </TouchableOpacity>
 
       <Text style={styles.sectionHeading}>Add a note</Text>
       <TextInput
         style={styles.noteInput}
         placeholder="What was this for?"
-        placeholderTextColor="#94A3B8"
+        placeholderTextColor={theme.textSecondary}
         value={note}
         onChangeText={setNote}
         multiline
@@ -137,11 +142,11 @@ export default function AddExpenseScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: typeof colors.light) => StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 23,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: theme.background,
   },
   contentContainer: {
     padding: 20,
@@ -156,26 +161,26 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#1D4ED8',
+    color: theme.primary,
   },
   avatarPlaceholder: {
     width: 42,
     height: 42,
     borderRadius: 12,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: theme.avatarBg,
     alignItems: 'center',
     justifyContent: 'center',
   },
   sectionHeading: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#475569',
+    color: theme.textSecondary,
     marginBottom: 12,
   },
   amountContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 20,
     paddingHorizontal: 24,
     paddingVertical: 10,
@@ -187,7 +192,7 @@ const styles = StyleSheet.create({
   },
   currencySymbol: {
     fontSize: 32,
-    color: '#1D4ED8',
+    color: theme.primary,
     marginRight: 12,
     bottom:16,
   },
@@ -195,7 +200,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 32,
     fontWeight: '700',
-    color: '#0F172A',
+    color: theme.text,
     lineHeight: 50,
   },
   categoryRow: {
@@ -208,50 +213,50 @@ const styles = StyleSheet.create({
     width: 75,
     height: 95,
     borderRadius: 18,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
   },
   categoryItemSelected: {
     width: 76,
     height: 90,
     borderRadius: 18,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: theme.avatarBg,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: '#1D4ED8',
+    borderColor: theme.primary,
   },
   categoryLabel: {
     marginTop: 10,
     fontSize: 12,
-    color: '#64748B',
+    color: theme.textSecondary,
   },
   categoryLabelSelected: {
-    color: '#1D4ED8',
+    color: theme.primary,
     fontWeight: '700',
   },
   datePicker: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 18,
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
     marginBottom: 24,
   },
   dateIconWrapper: {
     width: 36,
     height: 36,
     borderRadius: 14,
-    backgroundColor: '#DBEAFE',
+    backgroundColor: theme.iconBlueBg,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -259,24 +264,24 @@ const styles = StyleSheet.create({
   dateLabel: {
     flex: 1,
     fontSize: 16,
-    color: '#0F172A',
+    color: theme.text,
   },
   noteInput: {
     minHeight: 110,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 20,
     padding: 18,
     fontSize: 16,
-    color: '#0F172A',
+    color: theme.text,
     textAlignVertical: 'top',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
     marginBottom: 24,
   },
   tipCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: theme.avatarBg,
     borderRadius: 20,
     padding: 16,
     marginBottom: 28,
@@ -285,7 +290,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 14,
-    backgroundColor: '#1D4ED8',
+    backgroundColor: theme.primary,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 14,
@@ -294,12 +299,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tipTitle: {
-    color: '#1D4ED8',
+    color: theme.primary,
     fontWeight: '700',
     marginBottom: 4,
   },
   tipBody: {
-    color: '#334155',
+    color: theme.textSecondary,
     fontSize: 14,
     lineHeight: 20,
   },
@@ -308,7 +313,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: '#1D4ED8',
+    backgroundColor: theme.primary,
     borderRadius: 24,
     paddingVertical: 18,
     shadowColor: '#000',
@@ -318,7 +323,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   saveButtonText: {
-    color: '#fff',
+    color: theme.buttonText,
     fontSize: 16,
     fontWeight: '700',
   },

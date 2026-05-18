@@ -1,5 +1,6 @@
 import { View, Text } from "react-native";
 import CategoryIcon from "./CategoryIcon";
+import { useTheme } from "@/context/ThemeContext";
 
 type Props = {
   amount: number;
@@ -14,6 +15,8 @@ export default function ExpenseCard({
   note,
   date,
 }: Props) {
+  const { theme } = useTheme();
+
   return (
     <View
       style={{
@@ -21,7 +24,7 @@ export default function ExpenseCard({
         alignItems: "center",
         justifyContent: "space-between",
         padding: 15,
-        backgroundColor: "#fff",
+        backgroundColor: theme.card,
         borderRadius: 16,
         marginBottom: 7,
         shadowColor: "#000",
@@ -35,17 +38,17 @@ export default function ExpenseCard({
         <CategoryIcon category={category} />
 
         <View>
-          <Text style={{ fontWeight: "600", fontSize: 15 }}>
+          <Text style={{ fontWeight: "600", fontSize: 15, color: theme.text }}>
             {note || category}
           </Text>
-          <Text style={{ fontSize: 12, color: "#888" }}>{date}</Text>
+          <Text style={{ fontSize: 12, color: theme.textSecondary }}>{date}</Text>
         </View>
       </View>
 
       {/* Right */}
-      <Text style={{ fontWeight: "700", fontSize: 16, }}>
+      <Text style={{ fontWeight: "700", fontSize: 16, color: theme.text }}>
         ${amount.toLocaleString()}
       </Text>
     </View>
   );
-}
+}

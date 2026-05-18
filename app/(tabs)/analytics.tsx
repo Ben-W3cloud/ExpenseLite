@@ -1,6 +1,9 @@
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@/context/ThemeContext';
+import { useMemo } from 'react';
+import { colors } from '@/constants/theme';
 
 const legend = [
   { label: 'Shopping', color: '#1D4ED8', percentage: '40%' },
@@ -17,6 +20,9 @@ const formatCurrency = (value: number) => {
 };
 
 export default function AnalyticsScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const currentWidth = Math.min((MONTHLY_CURRENT / MONTHLY_PREVIOUS) * 100, 100);
   const previousWidth = 100;
 
@@ -29,9 +35,9 @@ export default function AnalyticsScreen() {
         <View style={styles.header}>
           <Text style={styles.heading}>Analytics</Text>
           <View style={styles.headerActions}>
-            <Ionicons name="notifications-outline" size={22} color="#1D4ED8" />
+            <Ionicons name="notifications-outline" size={22} color={theme.primary} />
             <View style={styles.avatarCircle}>
-              <Ionicons name="person" size={20} color="#1D4ED8" />
+              <Ionicons name="person" size={20} color={theme.primary} />
             </View>
           </View>
         </View>
@@ -39,7 +45,7 @@ export default function AnalyticsScreen() {
         <View style={styles.periodRow}>
           <Text style={styles.periodLabel}>October 2023</Text>
           <View style={styles.periodButton}>
-            <Ionicons name="calendar-outline" size={16} color="#1D4ED8" style={styles.periodIcon} />
+            <Ionicons name="calendar-outline" size={16} color={theme.primary} style={styles.periodIcon} />
             <Text style={styles.periodButtonText}>Monthly View</Text>
           </View>
         </View>
@@ -56,7 +62,7 @@ export default function AnalyticsScreen() {
             <Text style={styles.cardTitle}>Top Category</Text>
             <View style={styles.topCategoryTag}>
               <View style={styles.topCategoryIcon}>
-                <Ionicons name="cart-outline" size={18} color="#1D4ED8" />
+                <Ionicons name="cart-outline" size={18} color={theme.primary} />
               </View>
               <Text style={styles.topCategoryText}>Shopping</Text>
             </View>
@@ -100,7 +106,7 @@ export default function AnalyticsScreen() {
               <Text style={styles.compareAmount}>{formatCurrency(MONTHLY_CURRENT)}</Text>
             </View>
             <View style={styles.compareBarBackground}>
-              <View style={[styles.compareBarFill, { width: `${currentWidth}%`, backgroundColor: '#1D4ED8' }]} />
+              <View style={[styles.compareBarFill, { width: `${currentWidth}%`, backgroundColor: theme.primary }]} />
             </View>
           </View>
           <View style={styles.compareRow}>
@@ -109,7 +115,7 @@ export default function AnalyticsScreen() {
               <Text style={styles.compareAmount}>{formatCurrency(MONTHLY_PREVIOUS)}</Text>
             </View>
             <View style={styles.compareBarBackground}>
-              <View style={[styles.compareBarFill, { width: `${previousWidth}%`, backgroundColor: '#334155' }]} />
+              <View style={[styles.compareBarFill, { width: `${previousWidth}%`, backgroundColor: theme.iconSlate }]} />
             </View>
           </View>
           <View style={styles.insightBox}>
@@ -124,11 +130,11 @@ export default function AnalyticsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: typeof colors.light) => StyleSheet.create({
   container: {
     flex: 1,
     paddingTop:25,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: theme.background,
   },
   contentContainer: {
     padding: 20,
@@ -142,7 +148,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#0F172A',
+    color: theme.text,
   },
   headerActions: {
     flexDirection: 'row',
@@ -153,7 +159,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 12,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: theme.avatarBg,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -166,7 +172,7 @@ const styles = StyleSheet.create({
   periodLabel: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#0F172A',
+    color: theme.text,
   },
   periodButton: {
     flexDirection: 'row',
@@ -174,16 +180,16 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingVertical: 10,
     paddingHorizontal: 16,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
   },
   periodIcon: {
     marginTop: 2,
   },
   periodButtonText: {
-    color: '#1D4ED8',
+    color: theme.primary,
     fontWeight: '600',
   },
   topCardsRow: {
@@ -193,7 +199,7 @@ const styles = StyleSheet.create({
   },
   largeCard: {
     flex: 2,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 24,
     padding: 20,
     shadowColor: '#000',
@@ -203,7 +209,7 @@ const styles = StyleSheet.create({
   },
   smallCard: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 24,
     padding: 10,
     shadowColor: '#000',
@@ -215,7 +221,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 14,
     fontWeight: '900',
-    color: '#64748B',
+    color: theme.textSecondary,
     marginBottom: 12,
   },
   cardValueRow: {
@@ -226,12 +232,12 @@ const styles = StyleSheet.create({
   cardValue: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#1D4ED8',
+    color: theme.primary,
   },
   cardChange: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#047857',
+    color: theme.iconGreen,
   },
   topCategoryTag: {
     flexDirection: 'row',
@@ -240,23 +246,23 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 6,
     borderRadius: 18,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: theme.avatarBg,
   },
   topCategoryIcon: {
     width: 36,
     height: 36,
     borderRadius: 12,
-    backgroundColor: '#DBEAFE',
+    backgroundColor: theme.iconBlueBg,
     alignItems: 'center',
     justifyContent: 'center',
   },
   topCategoryText: {
     fontSize: 16,
     fontWeight: '900',
-    color: '#0F172A',
+    color: theme.text,
   },
   chartCard: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 24,
     padding: 20,
     shadowColor: '#000',
@@ -268,7 +274,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0F172A',
+    color: theme.text,
     marginBottom: 18,
   },
   donutContainer: {
@@ -306,23 +312,23 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 0,
   },
   segmentBlue: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: theme.primary,
   },
   segmentGreen: {
-    backgroundColor: '#10B981',
+    backgroundColor: theme.iconGreen,
   },
   segmentGray: {
-    backgroundColor: '#334155',
+    backgroundColor: theme.iconSlate,
   },
   segmentPink: {
-    backgroundColor: '#FBCFE8',
+    backgroundColor: theme.iconRed,
   },
   donutCenter: {
     position: 'absolute',
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: theme.background,
     top: 40,
     left: 40,
     alignItems: 'center',
@@ -335,13 +341,13 @@ const styles = StyleSheet.create({
   donutCenterLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#64748B',
+    color: theme.textSecondary,
     marginBottom: 6,
   },
   donutCenterValue: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#0F172A',
+    color: theme.text,
   },
   legendList: {
     gap: 14,
@@ -362,16 +368,16 @@ const styles = StyleSheet.create({
   },
   legendLabel: {
     fontSize: 14,
-    color: '#0F172A',
+    color: theme.text,
     fontWeight: '600',
   },
   legendValue: {
     fontSize: 14,
-    color: '#0F172A',
+    color: theme.text,
     fontWeight: '700',
   },
   compareCard: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 24,
     padding: 20,
     shadowColor: '#000',
@@ -387,7 +393,7 @@ const styles = StyleSheet.create({
   },
   compareSubtitle: {
     fontSize: 14,
-    color: '#64748B',
+    color: theme.textSecondary,
   },
   compareRow: {
     marginBottom: 18,
@@ -395,20 +401,20 @@ const styles = StyleSheet.create({
   compareLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#64748B',
+    color: theme.textSecondary,
     marginBottom: 6,
   },
   compareAmount: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0F172A',
+    color: theme.text,
     marginBottom: 10,
   },
   compareBarBackground: {
     width: '100%',
     height: 14,
     borderRadius: 10,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: theme.border,
     overflow: 'hidden',
   },
   compareBarFill: {
@@ -416,19 +422,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   insightBox: {
-    backgroundColor: '#ECFDF5',
+    backgroundColor: theme.iconGreenBg,
     borderRadius: 18,
     padding: 16,
   },
   insightTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#047857',
+    color: theme.iconGreen,
     marginBottom: 8,
   },
   insightBody: {
     fontSize: 14,
     lineHeight: 20,
-    color: '#334155',
+    color: theme.textSecondary,
   },
 });

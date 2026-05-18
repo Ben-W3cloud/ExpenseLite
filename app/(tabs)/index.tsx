@@ -2,7 +2,9 @@ import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import ExpenseCard from '@/components/ExpenseCard';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '@/context/ThemeContext';
+import { useMemo } from 'react';
+import { colors } from '@/constants/theme';
 
 const transactions = [
   { category: 'food', note: 'Starbucks', amount: 12.45, date: 'Oct 24' },
@@ -12,6 +14,9 @@ const transactions = [
 ];
 
 export default function HomeScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -29,7 +34,7 @@ export default function HomeScreen() {
             </View>
           </View>
           <View style={styles.notificationButton}>
-            <Ionicons name="notifications-outline" size={22} color="#1D4ED8" />
+            <Ionicons name="notifications-outline" size={22} color={theme.primary} />
           </View>
         </View>
 
@@ -93,11 +98,11 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: typeof colors.light) => StyleSheet.create({
   container: {
     flex: 1,
     paddingTop:25,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: theme.background,
   },
   contentContainer: {
     padding: 20,
@@ -117,22 +122,22 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 18,
-    backgroundColor: '#E0E7FF',
+    backgroundColor: theme.avatarBg,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
-    color: '#1D4ED8',
+    color: theme.primary,
     fontSize: 25,
     fontWeight: '900',
   },
   greeting: {
-    color: '#0F172A',
+    color: theme.text,
     fontSize: 18,
     fontWeight: '900',
   },
   subTitle: {
-    color: '#64748B',
+    color: theme.textSecondary,
     fontSize: 13,
     marginTop: 2,
   },
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 14,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -150,7 +155,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   balanceCard: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: theme.primary,
     borderRadius: 28,
     padding: 24,
     minHeight: 180,
@@ -168,7 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   balanceLabel: {
-    color: '#C7D2FE',
+    color: '#C7D2FE', // Keeping these specific lighter blue variants for the primary card
     fontSize: 14,
   },
   iconCircle: {
@@ -192,18 +197,18 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   trendBadge: {
-    backgroundColor: '#DCFCE7',
+    backgroundColor: theme.iconGreenBg,
     borderRadius: 12,
     paddingVertical: 6,
     paddingHorizontal: 12,
   },
   trendBadgeText: {
-    color: '#15803D',
+    color: theme.iconGreen,
     fontWeight: '700',
     fontSize: 13,
   },
   balanceNote: {
-    color: '#DBEAFE',
+    color: '#DBEAFE', // Specific to primary card
     fontSize: 13,
   },
   summaryRow: {
@@ -214,11 +219,11 @@ const styles = StyleSheet.create({
   },
   summaryCard: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 20,
     padding: 18,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
     shadowColor: '#000',
     shadowOpacity: 0.03,
     shadowRadius: 10,
@@ -226,25 +231,25 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   summaryLabel: {
-    color: '#475569',
+    color: theme.textSecondary,
     fontSize: 13,
     marginBottom: 8,
   },
   summaryValue: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#1D4ED8',
+    color: theme.primary,
   },
   summaryValueGreen: {
-    color: '#047857',
+    color: theme.iconGreen,
   },
   trendCard: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 28,
     padding: 18,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
   },
   trendHeader: {
     flexDirection: 'row',
@@ -253,18 +258,18 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   trendTitle: {
-    color: '#0F172A',
+    color: theme.text,
     fontSize: 16,
     fontWeight: '700',
   },
   trendLabel: {
-    color: '#64748B',
+    color: theme.textSecondary,
     fontSize: 13,
   },
   trendGraphPlaceholder: {
     height: 150,
     borderRadius: 22,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: theme.avatarBg,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -273,7 +278,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: {
-    color: '#0F172A',
+    color: theme.text,
     fontSize: 16,
     fontWeight: '700',
   },
@@ -282,7 +287,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   seeAllText: {
-    color: '#1D4ED8',
+    color: theme.primary,
     fontWeight: '700',
   },
   transactionList: {

@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ExpenseCard from '@/components/ExpenseCard';
+import { useTheme } from '@/context/ThemeContext';
+import { colors } from '@/constants/theme';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -207,6 +209,9 @@ const filterTransactionsByCategory = (
 // ============================================================================
 
 export default function ExpensesScreen() {
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -232,7 +237,7 @@ export default function ExpensesScreen() {
   }: {
     section: GroupedTransaction;
   }) => {
-    const totalColor = section.total >= 0 ? '#047857' : '#DC2626';
+    const totalColor = section.total >= 0 ? theme.iconGreen : theme.iconRed;
     const totalSign = section.total >= 0 ? '+' : '-';
 
     return (
@@ -260,7 +265,7 @@ export default function ExpensesScreen() {
 
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Ionicons name="receipt" size={64} color="#D1D5DB" />
+      <Ionicons name="receipt" size={64} color={theme.border} />
       <Text style={styles.emptyStateText}>No transactions found</Text>
       <Text style={styles.emptyStateSubtext}>Try adjusting your filters</Text>
     </View>
@@ -271,7 +276,7 @@ export default function ExpensesScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Expenses</Text>
-        <Ionicons name="notifications-outline" size={24} color="#1D4ED8" />
+        <Ionicons name="notifications-outline" size={24} color={theme.primary} />
       </View>
 
       {/* Main Content */}
@@ -285,13 +290,13 @@ export default function ExpensesScreen() {
           <Ionicons
             name="search"
             size={20}
-            color="#9CA3AF"
+            color={theme.textSecondary}
             style={styles.searchIcon}
           />
           <TextInput
             style={styles.searchInput}
             placeholder="Search transactions..."
-            placeholderTextColor="#D1D5DB"
+            placeholderTextColor={theme.textSecondary}
             value={searchText}
             onChangeText={setSearchText}
           />
@@ -338,6 +343,7 @@ export default function ExpensesScreen() {
             renderSectionHeader={renderSectionHeader}
             scrollEnabled={false}
             contentContainerStyle={styles.listContent}
+            extraData={theme}
           />
         ) : (
           renderEmptyState()
@@ -347,11 +353,11 @@ export default function ExpensesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: typeof colors.light) => StyleSheet.create({
   container: {
     paddingTop: 25,
     flex: 1,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: theme.background,
   },
   header: {
     flexDirection: 'row',
@@ -364,7 +370,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#0F172A',
+    color: theme.text,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -373,10 +379,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
     shadowColor: '#000',
     shadowOpacity: 0.04,
     shadowRadius: 4,
@@ -388,7 +394,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#0F172A',
+    color: theme.text,
   },
   filterChipsContainer: {
     marginBottom: 20,
@@ -401,21 +407,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 24,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: theme.iconSlateBg,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
   },
   filterChipSelected: {
-    backgroundColor: '#1D4ED8',
-    borderColor: '#1D4ED8',
+    backgroundColor: theme.primary,
+    borderColor: theme.primary,
   },
   filterChipText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#64748B',
+    color: theme.textSecondary,
   },
   filterChipTextSelected: {
-    color: '#fff',
+    color: theme.buttonText,
   },
   listContent: {
     paddingHorizontal: 20,
@@ -431,7 +437,7 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#64748B',
+    color: theme.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -448,12 +454,12 @@ const styles = StyleSheet.create({
   emptyStateText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#0F172A',
+    color: theme.text,
     marginTop: 16,
   },
   emptyStateSubtext: {
     fontSize: 14,
-    color: '#64748B',
+    color: theme.textSecondary,
     marginTop: 8,
   },
 });

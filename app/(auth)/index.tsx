@@ -1,19 +1,21 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@/context/ThemeContext';
+import { useMemo } from 'react';
+import { colors } from '@/constants/theme';
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
+      <View style={styles.content}>
         <View style={styles.hero}>
           <View style={styles.iconCircle}>
-            <Ionicons name="wallet-outline" size={56} color="#1D4ED8" />
+            <Ionicons name="wallet-outline" size={56} color={theme.primary} />
           </View>
           <Text style={styles.title}>ExpenseLite</Text>
           <Text style={styles.subtitle}>
@@ -23,8 +25,8 @@ export default function WelcomeScreen() {
 
         <View style={styles.features}>
           <View style={styles.featureRow}>
-            <View style={[styles.featureIcon, { backgroundColor: '#E0F2FE' }]}>
-              <Ionicons name="pie-chart-outline" size={22} color="#1D4ED8" />
+            <View style={[styles.featureIcon, { backgroundColor: theme.iconBlueBg }]}>
+              <Ionicons name="pie-chart-outline" size={22} color={theme.primary} />
             </View>
             <View style={styles.featureText}>
               <Text style={styles.featureTitle}>Smart Analytics</Text>
@@ -33,8 +35,8 @@ export default function WelcomeScreen() {
           </View>
 
           <View style={styles.featureRow}>
-            <View style={[styles.featureIcon, { backgroundColor: '#DCFCE7' }]}>
-              <Ionicons name="shield-checkmark-outline" size={22} color="#047857" />
+            <View style={[styles.featureIcon, { backgroundColor: theme.iconGreenBg }]}>
+              <Ionicons name="shield-checkmark-outline" size={22} color={theme.iconGreen} />
             </View>
             <View style={styles.featureText}>
               <Text style={styles.featureTitle}>Secure & Private</Text>
@@ -43,22 +45,32 @@ export default function WelcomeScreen() {
           </View>
 
           <View style={styles.featureRow}>
-            <View style={[styles.featureIcon, { backgroundColor: '#FEF3C7' }]}>
-              <Ionicons name="trending-up-outline" size={22} color="#B45309" />
+            <View style={[styles.featureIcon, { backgroundColor: theme.iconRedBg }]}>
+              <Ionicons name="trending-up-outline" size={22} color={theme.iconRed} />
             </View>
             <View style={styles.featureText}>
               <Text style={styles.featureTitle}>Goal Tracking</Text>
               <Text style={styles.featureSubtitle}>Build better money habits</Text>
             </View>
           </View>
+
+          <View style={styles.featureRow}>
+            <View style={[styles.featureIcon, { backgroundColor: theme.iconSlateBg }]}>
+              <Ionicons name="bar-chart" size={22} color={theme.iconSlate} />
+            </View>
+            <View style={styles.featureText}>
+              <Text style={styles.featureTitle}>Stay Informed</Text>
+              <Text style={styles.featureSubtitle}>Stay informed on your expenses</Text>
+            </View>
+          </View>
         </View>
-      </ScrollView>
+      </View >
 
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.primaryButton}
           activeOpacity={0.85}
-          onPress={() => router.push('/')}
+          onPress={() => router.push('/(auth)/register')}
         >
           <Text style={styles.primaryButtonText}>Create Account</Text>
         </TouchableOpacity>
@@ -71,19 +83,19 @@ export default function WelcomeScreen() {
           <Text style={styles.secondaryButtonText}>I already have an account</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </View >
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: typeof colors.light) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: theme.background,
   },
   content: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 80,
+    paddingHorizontal: 32,
+    top: 120,
     paddingBottom: 24,
   },
   hero: {
@@ -94,7 +106,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 40,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: theme.avatarBg,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
@@ -107,12 +119,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: '800',
-    color: '#0F172A',
+    color: theme.text,
     marginBottom: 12,
   },
   subtitle: {
     fontSize: 15,
-    color: '#64748B',
+    color: theme.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
     maxWidth: 280,
@@ -123,11 +135,11 @@ const styles = StyleSheet.create({
   featureRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
     shadowColor: '#000',
     shadowOpacity: 0.03,
     shadowRadius: 10,
@@ -148,12 +160,12 @@ const styles = StyleSheet.create({
   featureTitle: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#0F172A',
+    color: theme.text,
     marginBottom: 2,
   },
   featureSubtitle: {
     fontSize: 13,
-    color: '#64748B',
+    color: theme.textSecondary,
   },
   footer: {
     paddingHorizontal: 24,
@@ -162,7 +174,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   primaryButton: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: theme.primary,
     borderRadius: 24,
     paddingVertical: 18,
     alignItems: 'center',
@@ -173,20 +185,20 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   primaryButtonText: {
-    color: '#fff',
+    color: theme.buttonText,
     fontSize: 16,
     fontWeight: '700',
   },
   secondaryButton: {
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 24,
     paddingVertical: 18,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
   },
   secondaryButtonText: {
-    color: '#1D4ED8',
+    color: theme.primary,
     fontSize: 16,
     fontWeight: '700',
   },

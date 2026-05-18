@@ -1,16 +1,30 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
+import { useTheme } from '@/context/ThemeContext';
 
 export default function TabLayout() {
+  const { theme } = useTheme();
+
   return (
-    <Tabs screenOptions={{headerShown: false}}>
+    <Tabs 
+      screenOptions={{ 
+        headerShown: false, 
+        tabBarStyle: { 
+          height: 100,
+          backgroundColor: theme.card,
+          borderTopColor: theme.border,
+        },
+        tabBarActiveTintColor: theme.tabIconSelected,
+        tabBarInactiveTintColor: theme.tabIconDefault,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="home" size={24} color={color} />
+            <Ionicons name="home" size={28} color={color} />
           ),
         }}
       />
@@ -20,7 +34,7 @@ export default function TabLayout() {
         options={{
           title: "Expenses",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="list" size={24} color={color} />
+            <Ionicons name="list" size={28} color={color} />
           ),
         }}
       />
@@ -36,7 +50,7 @@ export default function TabLayout() {
                 width: 58,
                 height: 58,
                 borderRadius: 29,
-                backgroundColor: '#1D4ED8',
+                backgroundColor: theme.primary,
                 justifyContent: 'center',
                 alignItems: 'center',
                 marginTop: -10,
@@ -58,7 +72,7 @@ export default function TabLayout() {
         options={{
           title: "Analytics",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="bar-chart" size={24} color={color} />
+            <Ionicons name="bar-chart" size={28} color={color} />
           ),
         }}
       />
@@ -68,7 +82,7 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="person" size={24} color={color} />
+            <Ionicons name="person" size={28} color={color} />
           ),
         }}
       />

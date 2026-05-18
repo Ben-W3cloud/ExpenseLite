@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,14 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@/context/ThemeContext';
+import { colors } from '@/constants/theme';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const styles = useMemo(() => getStyles(theme), [theme]);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +38,7 @@ export default function LoginScreen() {
           activeOpacity={0.8}
           onPress={() => router.back()}
         >
-          <Ionicons name="chevron-back" size={24} color="#1D4ED8" />
+          <Ionicons name="chevron-back" size={24} color={theme.primary} />
         </TouchableOpacity>
 
         <View style={styles.header}>
@@ -45,11 +50,11 @@ export default function LoginScreen() {
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Email</Text>
             <View style={styles.inputWrapper}>
-              <Ionicons name="mail-outline" size={18} color="#94A3B8" style={styles.inputIcon} />
+              <Ionicons name="mail-outline" size={18} color={theme.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="you@example.com"
-                placeholderTextColor="#94A3B8"
+                placeholderTextColor={theme.textSecondary}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={email}
@@ -61,11 +66,11 @@ export default function LoginScreen() {
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Password</Text>
             <View style={styles.inputWrapper}>
-              <Ionicons name="lock-closed-outline" size={18} color="#94A3B8" style={styles.inputIcon} />
+              <Ionicons name="lock-closed-outline" size={18} color={theme.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={[styles.input, { paddingRight: 44 }]}
                 placeholder="Enter your password"
-                placeholderTextColor="#94A3B8"
+                placeholderTextColor={theme.textSecondary}
                 secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={setPassword}
@@ -78,7 +83,7 @@ export default function LoginScreen() {
                 <Ionicons
                   name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={18}
-                  color="#94A3B8"
+                  color={theme.textSecondary}
                 />
               </TouchableOpacity>
             </View>
@@ -100,7 +105,7 @@ export default function LoginScreen() {
         </View>
 
         <TouchableOpacity style={styles.socialButton} activeOpacity={0.85}>
-          <Ionicons name="logo-google" size={20} color="#0F172A" />
+          <Ionicons name="logo-google" size={20} color={theme.text} />
           <Text style={styles.socialButtonText}>Continue with Google</Text>
         </TouchableOpacity>
 
@@ -115,10 +120,10 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: typeof colors.light) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFF',
+    backgroundColor: theme.background,
   },
   content: {
     flexGrow: 1,
@@ -130,7 +135,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 14,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
@@ -146,12 +151,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '800',
-    color: '#0F172A',
+    color: theme.text,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 15,
-    color: '#64748B',
+    color: theme.textSecondary,
     lineHeight: 22,
   },
   form: {
@@ -164,15 +169,15 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#475569',
+    color: theme.textSecondary,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
     paddingHorizontal: 16,
     height: 56,
   },
@@ -182,7 +187,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#0F172A',
+    color: theme.text,
     height: '100%',
   },
   eyeButton: {
@@ -194,11 +199,11 @@ const styles = StyleSheet.create({
   forgotText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1D4ED8',
+    color: theme.primary,
     textAlign: 'right',
   },
   primaryButton: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: theme.primary,
     borderRadius: 24,
     paddingVertical: 18,
     alignItems: 'center',
@@ -210,7 +215,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   primaryButtonText: {
-    color: '#fff',
+    color: theme.buttonText,
     fontSize: 16,
     fontWeight: '700',
   },
@@ -223,11 +228,11 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: theme.border,
   },
   dividerText: {
     fontSize: 13,
-    color: '#94A3B8',
+    color: theme.textSecondary,
     fontWeight: '600',
   },
   socialButton: {
@@ -235,17 +240,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: '#fff',
+    backgroundColor: theme.card,
     borderRadius: 24,
     paddingVertical: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: theme.border,
     marginBottom: 24,
   },
   socialButtonText: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#0F172A',
+    color: theme.text,
   },
   footer: {
     flexDirection: 'row',
@@ -255,11 +260,11 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: '#64748B',
+    color: theme.textSecondary,
   },
   footerLink: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#1D4ED8',
+    color: theme.primary,
   },
 });

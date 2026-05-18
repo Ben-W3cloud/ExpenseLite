@@ -1,41 +1,85 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
-export const Colors = {
+export const colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
+    background: '#F8FAFF',
+    card: '#fff',
+    text: '#0F172A',
+    textSecondary: '#64748B',
+    primary: '#1D4ED8',
+    avatarBg: '#EFF6FF',
+    border: '#E2E8F0',
+    iconBlueBg: '#E0F2FE',
+    iconBlue: '#1D4ED8',
+    iconSlateBg: '#E2E8F0',
+    iconSlate: '#334155',
+    iconGreenBg: '#DCFCE7',
+    iconGreen: '#047857',
+    iconRedBg: '#FEE2E2',
+    iconRed: '#DC2626',
+    iconOrangeBg: '#FFF3EA',
+    iconOrange: '#FF8C42',
+    iconPurpleBg: '#F3E8FF',
+    iconPurple: '#8338EC',
+    iconPinkBg: '#FFE8F0',
+    iconPink: '#FF006E',
+    iconTealBg: '#E6FFFA',
+    iconTeal: '#2EC4B6',
+    iconGrayBg: '#F1F5F9',
+    iconGray: '#6C757D',
+    sheetBg: '#ffffff',
+    sheetItemBg: '#f8fafc',
+    sheetDrag: '#e2e8f0',
+    textPrimarySheet: '#2563eb',
+    textCancel: 'grey',
+    switchTrackFalse: '#CBD5E1',
+    buttonText: '#fff',
     tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    tabIconSelected: '#1D4ED8',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
+    background: '#0F172A',
+    card: '#1E293B',
+    text: '#F8FAFC',
+    textSecondary: '#94A3B8',
+    primary: '#3B82F6',
+    avatarBg: '#1E3A8A',
+    border: '#334155',
+    iconBlueBg: '#1E3A8A',
+    iconBlue: '#60A5FA',
+    iconSlateBg: '#334155',
+    iconSlate: '#94A3B8',
+    iconGreenBg: '#064E3B',
+    iconGreen: '#34D399',
+    iconRedBg: '#7F1D1D',
+    iconRed: '#F87171',
+    iconOrangeBg: '#4C2A10',
+    iconOrange: '#FFA066',
+    iconPurpleBg: '#2E104C',
+    iconPurple: '#A066FF',
+    iconPinkBg: '#4C0825',
+    iconPink: '#FF5E97',
+    iconTealBg: '#0E4B46',
+    iconTeal: '#4FD1C5',
+    iconGrayBg: '#334155',
+    iconGray: '#94A3B8',
+    sheetBg: '#1E293B',
+    sheetItemBg: '#0F172A',
+    sheetDrag: '#475569',
+    textPrimarySheet: '#60A5FA',
+    textCancel: '#94A3B8',
+    switchTrackFalse: '#475569',
+    buttonText: '#fff',
     tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
+    tabIconSelected: '#3B82F6',
+  }
 };
 
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: 'ui-monospace',
   },
   default: {
