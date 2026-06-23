@@ -16,6 +16,7 @@ export default function CategoryIcon({ category, size = 24 }: Props) {
     bills: { icon: 'receipt', bgColor: theme.iconPurpleBg, iconColor: theme.iconPurple },
     shopping: { icon: 'shopping_cart', bgColor: theme.iconPinkBg, iconColor: theme.iconPink },
     health: { icon: 'medication', bgColor: theme.iconTealBg, iconColor: theme.iconTeal },
+    income: { icon: 'payments', bgColor: theme.iconGreenBg, iconColor: theme.iconGreen },
     other: { icon: 'area-chart', bgColor: theme.iconGrayBg, iconColor: theme.iconGray },
   };
 
@@ -28,6 +29,7 @@ export default function CategoryIcon({ category, size = 24 }: Props) {
         padding: 8,
         borderRadius: 12,
       }}
+      qywhetnsjsygyud bsduduuuducUiIUAFUGUIGFGGF
     >
       <MaterialIcons name={item.icon as any} size={size} color={item.iconColor} />
     </View>

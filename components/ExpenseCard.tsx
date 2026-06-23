@@ -7,6 +7,8 @@ type Props = {
   category: string;
   note?: string;
   date: string;
+  type?: 'expense' | 'income';
+  currency?: string;
 };
 
 export default function ExpenseCard({
@@ -14,8 +16,11 @@ export default function ExpenseCard({
   category,
   note,
   date,
+  type = 'expense',
+  currency = '$',
 }: Props) {
   const { theme } = useTheme();
+  const isIncome = type === 'income';
 
   return (
     <View
@@ -46,9 +51,9 @@ export default function ExpenseCard({
       </View>
 
       {/* Right */}
-      <Text style={{ fontWeight: "700", fontSize: 16, color: theme.text }}>
-        ${amount.toLocaleString()}
+      <Text style={{ fontWeight: "700", fontSize: 16, color: isIncome ? theme.iconGreen : theme.text }}>
+        {isIncome ? '+' : '-'}{currency}{amount.toLocaleString()}
       </Text>
     </View>
   );
-}
+}

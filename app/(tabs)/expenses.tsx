@@ -7,26 +7,17 @@ import {
   ScrollView,
   SectionList,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import ExpenseCard from '@/components/ExpenseCard';
 import { useTheme } from '@/context/ThemeContext';
+import { useAuth } from '@/hooks/useAuth';
+import { useTransactions } from '@/hooks/useTransactions';
 import { colors } from '@/constants/theme';
-
-// ============================================================================
-// TYPE DEFINITIONS
-// ============================================================================
-
-type TransactionType = 'expense' | 'income';
-
-type Transaction = {
-  id: string;
-  name: string;
-  category: string;
-  amount: number;
-  date: Date;
-  type: TransactionType;
-};
+import type { Transaction } from '@/services/transactionService';
 
 type GroupedTransaction = {
   date: string;
@@ -35,431 +26,242 @@ type GroupedTransaction = {
   data: Transaction[];
 };
 
-// ============================================================================
-// SAMPLE DATA
-// ============================================================================
+const getRelativeDateLabel = (txDateStr: string, maxDate: Date): string => {
+  const txDate = new Date(txDateStr);
+  txDate.setHours(0, 0, 0, 0);
+  const refDate = new Date(maxDate);
+  refDate.setHours(0, 0, 0, 0);
+  const diffDays = (refDate.getTime() - txDate.getTime()) / (1000 * 60 * 60 * 24);
+  if (diffDays === 0) return 'TODAY';
+  if (diffDays === 1) return 'YESTERDAY';
+  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  return `${txDate.getDate()} ${months[txDate.getMonth()]}`;
+};
 
-const sampleTransactions: Transaction[] = [
-  // TODAY (Oct 24)
-  {
-    id: '1',
-    name: 'Blueberry Cafe',
-    category: 'restaurant',
-    amount: 24.5,
-    date: new Date(2025, 9, 24, 12, 45),
-    type: 'expense',
-  },
-  {
-    id: '2',
-    name: 'Electric Company',
-    category: 'bills',
-    amount: 118.0,
-    date: new Date(2025, 9, 24, 9, 15),
-    type: 'expense',
-  },
-  // YESTERDAY (Oct 23)
-  {
-    id: '3',
-    name: 'Salary Deposit',
-    category: 'bills',
-    amount: 2500.0,
-    date: new Date(2025, 9, 23, 4, 30),
-    type: 'income',
-  },
-  {
-    id: '4',
-    name: 'Amazon Prime',
-    category: 'fastfood',
-    amount: 50.0,
-    date: new Date(2025, 9, 23, 11, 20),
-    type: 'expense',
-  },
-  // 2 DAYS AGO (Oct 22)
-  {
-    id: '5',
-    name: 'Uber Trip',
-    category: 'bills',
-    amount: 35.2,
-    date: new Date(2025, 9, 22, 8, 45),
-    type: 'expense',
-  },
-];
+const groupByDate = (transactions: Transaction[]): GroupedTransaction[] => {
+  if (transactions.length === 0) return [];
+  const maxDate = new Date(Math.max(...transactions.map((t) => new Date(t.occurred_at).getTime())));
+  const grouped = new Map<string, Transaction[]>();
+  transactions.forEach((tx) => {
+    const key = new Date(tx.occurred_at).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key)!.push(tx);
+  });
+  return Array.from(grouped.entries())
+    .map(([dateKey, txs]) => {
+      const total = txs.reduce((s, t) => s + (t.type === 'income' ? Number(t.amount) : -Number(t.amount)), 0);
+      return { date: dateKey, label: getRelativeDateLabel(dateKey, maxDate), total, data: txs };
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+};
 
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
-
-/**
- * Get all unique categories from transactions, with "All" at the start
- */
 const getCategories = (transactions: Transaction[]): string[] => {
   const unique = new Set(transactions.map((t) => t.category));
   return ['all', ...Array.from(unique).sort()];
 };
 
-/**
- * Calculate relative date label (TODAY, YESTERDAY, or formatted date)
- */
-const getRelativeDateLabel = (transactionDate: Date, referenceDate: Date): string => {
-  const txDate = new Date(transactionDate);
-  txDate.setHours(0, 0, 0, 0);
-
-  const refDate = new Date(referenceDate);
-  refDate.setHours(0, 0, 0, 0);
-
-  const diffTime = refDate.getTime() - txDate.getTime();
-  const diffDays = diffTime / (1000 * 60 * 60 * 24);
-
-  if (diffDays === 0) {
-    return 'TODAY';
-  }
-  if (diffDays === 1) {
-    return 'YESTERDAY';
-  }
-
-  // Format: "DD MMM" (e.g., "22 OCT")
-  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-  const day = txDate.getDate();
-  const month = months[txDate.getMonth()];
-  return `${day} ${month}`;
-};
-
-/**
- * Group transactions by date with relative labels
- */
-const groupTransactionsByDate = (transactions: Transaction[]): GroupedTransaction[] => {
-  if (transactions.length === 0) {
-    return [];
-  }
-
-  // Find the maximum date to use as reference for "TODAY"
-  const maxDate = new Date(
-    Math.max(...transactions.map((t) => t.date.getTime()))
-  );
-
-  // Group by date
-  const grouped = new Map<string, Transaction[]>();
-  transactions.forEach((tx) => {
-    const dateKey = tx.date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-    if (!grouped.has(dateKey)) {
-      grouped.set(dateKey, []);
-    }
-    grouped.get(dateKey)!.push(tx);
-  });
-
-  // Convert to sorted array with labels and totals
-  const result: GroupedTransaction[] = Array.from(grouped.entries())
-    .map(([dateKey, txs]) => {
-      const date = new Date(dateKey);
-      const label = getRelativeDateLabel(date, maxDate);
-      const total = txs.reduce((sum, tx) => {
-        return sum + (tx.type === 'income' ? tx.amount : -tx.amount);
-      }, 0);
-
-      return {
-        date: dateKey,
-        label,
-        total,
-        data: txs.sort((a, b) => b.date.getTime() - a.date.getTime()),
-      };
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  return result;
-};
-
-/**
- * Filter transactions by search query (name or category)
- */
-const filterTransactionsBySearch = (
-  transactions: Transaction[],
-  searchText: string
-): Transaction[] => {
-  if (!searchText.trim()) {
-    return transactions;
-  }
-
-  const query = searchText.toLowerCase().trim();
-  return transactions.filter(
-    (tx) =>
-      tx.name.toLowerCase().includes(query) ||
-      tx.category.toLowerCase().includes(query)
-  );
-};
-
-/**
- * Filter transactions by category
- */
-const filterTransactionsByCategory = (
-  transactions: Transaction[],
-  category: string
-): Transaction[] => {
-  if (category === 'all') {
-    return transactions;
-  }
-  return transactions.filter((tx) => tx.category === category);
-};
-
-// ============================================================================
-// MAIN COMPONENT
-// ============================================================================
-
 export default function ExpensesScreen() {
   const { theme } = useTheme();
+  const { profile } = useAuth();
+  const { transactions, loading, update, remove, refresh } = useTransactions();
   const styles = useMemo(() => getStyles(theme), [theme]);
 
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Get available categories
-  const categories = useMemo(() => getCategories(sampleTransactions), []);
+  const currency = profile?.currency === 'NGN' ? '₦' : profile?.currency === 'EUR' ? '€' : '$';
 
-  // Apply filters
-  const filteredTransactions = useMemo(() => {
-    let result = sampleTransactions;
-    result = filterTransactionsBySearch(result, searchText);
-    result = filterTransactionsByCategory(result, selectedCategory);
+  const categories = useMemo(() => getCategories(transactions), [transactions]);
+
+  const filtered = useMemo(() => {
+    let result = transactions;
+    if (selectedCategory !== 'all') result = result.filter((t) => t.category === selectedCategory);
+    if (searchText.trim()) {
+      const q = searchText.toLowerCase().trim();
+      result = result.filter((t) => t.name.toLowerCase().includes(q) || t.category.toLowerCase().includes(q));
+    }
     return result;
-  }, [searchText, selectedCategory]);
+  }, [transactions, selectedCategory, searchText]);
 
-  // Group by date
-  const groupedData = useMemo(
-    () => groupTransactionsByDate(filteredTransactions),
-    [filteredTransactions]
-  );
+  const groupedData = useMemo(() => groupByDate(filtered), [filtered]);
 
-  const renderSectionHeader = ({
-    section,
-  }: {
-    section: GroupedTransaction;
-  }) => {
+  const handleLongPress = (tx: Transaction) => {
+    Alert.alert(tx.name, `${tx.type === 'income' ? '+' : '-'}${currency}${Number(tx.amount).toLocaleString()}`, [
+      { text: 'Edit', onPress: () => handleEdit(tx) },
+      { text: 'Delete', style: 'destructive', onPress: () => handleDelete(tx) },
+      { text: 'Cancel', style: 'cancel' },
+    ]);
+  };
+
+  const handleEdit = (tx: Transaction) => {
+    const toggleType = tx.type === 'expense' ? 'income' : 'expense';
+    Alert.alert(
+      'Edit Transaction',
+      `"${tx.name}" — ${currency}${Number(tx.amount).toLocaleString()}`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: `Switch to ${toggleType.charAt(0).toUpperCase() + toggleType.slice(1)}`,
+          onPress: async () => {
+            try {
+              await update(tx.id, { type: toggleType });
+            } catch {
+              Alert.alert('Error', 'Could not update transaction.');
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleDelete = (tx: Transaction) => {
+    Alert.alert('Delete?', `Remove "${tx.name}"?`, [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await remove(tx.id);
+          } catch {
+            Alert.alert('Error', 'Could not delete transaction.');
+          }
+        },
+      },
+    ]);
+  };
+
+  const renderSectionHeader = ({ section }: { section: GroupedTransaction }) => {
     const totalColor = section.total >= 0 ? theme.iconGreen : theme.iconRed;
-    const totalSign = section.total >= 0 ? '+' : '-';
-
+    const sign = section.total >= 0 ? '+' : '-';
     return (
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionLabel}>{section.label}</Text>
         <Text style={[styles.sectionTotal, { color: totalColor }]}>
-          {totalSign}${Math.abs(section.total).toLocaleString()}
+          {sign}{currency}{Math.abs(section.total).toLocaleString()}
         </Text>
       </View>
     );
   };
 
-  const renderTransaction = ({ item }: { item: Transaction }) => (
-    <ExpenseCard
-      category={item.category}
-      note={item.name}
-      amount={item.amount}
-      date={item.date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      })}
-    />
-  );
-
-  const renderEmptyState = () => (
-    <View style={styles.emptyState}>
-      <Ionicons name="receipt" size={64} color={theme.border} />
-      <Text style={styles.emptyStateText}>No transactions found</Text>
-      <Text style={styles.emptyStateSubtext}>Try adjusting your filters</Text>
-    </View>
-  );
-
   return (
-    <View style={styles.container}>
-      {/* Header */}
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Expenses</Text>
-        <Ionicons name="notifications-outline" size={24} color={theme.primary} />
+        <TouchableOpacity onPress={refresh}>
+          <Ionicons name="refresh-outline" size={24} color={theme.primary} />
+        </TouchableOpacity>
       </View>
 
-      {/* Main Content */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-        nestedScrollEnabled={true}
-      >
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <Ionicons
-            name="search"
-            size={20}
-            color={theme.textSecondary}
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search transactions..."
-            placeholderTextColor={theme.textSecondary}
-            value={searchText}
-            onChangeText={setSearchText}
-          />
+      {loading && transactions.length === 0 ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={theme.primary} />
+          <Text style={styles.loadingText}>Loading transactions...</Text>
         </View>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+          <View style={styles.searchContainer}>
+            <Ionicons name="search" size={20} color={theme.textSecondary} style={styles.searchIcon} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search transactions..."
+              placeholderTextColor={theme.textSecondary}
+              value={searchText}
+              onChangeText={setSearchText}
+            />
+          </View>
 
-        {/* Category Filter Chips */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={16}
-          style={styles.filterChipsContainer}
-          contentContainerStyle={styles.filterChipsContent}
-        >
-          {categories.map((category) => {
-            const isSelected = selectedCategory === category;
-            return (
-              <TouchableOpacity
-                key={category}
-                style={[
-                  styles.filterChip,
-                  isSelected && styles.filterChipSelected,
-                ]}
-                onPress={() => setSelectedCategory(category)}
-              >
-                <Text
-                  style={[
-                    styles.filterChipText,
-                    isSelected && styles.filterChipTextSelected,
-                  ]}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.filterChipsContainer}
+            contentContainerStyle={styles.filterChipsContent}
+          >
+            {categories.map((cat) => {
+              const isSelected = selectedCategory === cat;
+              return (
+                <TouchableOpacity
+                  key={cat}
+                  style={[styles.filterChip, isSelected && styles.filterChipSelected]}
+                  onPress={() => setSelectedCategory(cat)}
                 >
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+                  <Text style={[styles.filterChipText, isSelected && styles.filterChipTextSelected]}>
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
 
-        {/* Transactions List */}
-        {groupedData.length > 0 ? (
-          <SectionList
-            sections={groupedData}
-            keyExtractor={(item) => item.id}
-            renderItem={renderTransaction}
-            renderSectionHeader={renderSectionHeader}
-            scrollEnabled={false}
-            contentContainerStyle={styles.listContent}
-            extraData={theme}
-          />
-        ) : (
-          renderEmptyState()
-        )}
-      </ScrollView>
-    </View>
+          {groupedData.length > 0 ? (
+            <SectionList
+              sections={groupedData}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity onLongPress={() => handleLongPress(item)} activeOpacity={0.9}>
+                  <ExpenseCard
+                    category={item.category}
+                    note={item.name}
+                    amount={Number(item.amount)}
+                    type={item.type}
+                    currency={currency}
+                    date={new Date(item.occurred_at).toLocaleTimeString('en-US', {
+                      hour: '2-digit', minute: '2-digit', hour12: true,
+                    })}
+                  />
+                </TouchableOpacity>
+              )}
+              renderSectionHeader={renderSectionHeader}
+              scrollEnabled={false}
+              contentContainerStyle={styles.listContent}
+            />
+          ) : (
+            <View style={styles.emptyState}>
+              <Ionicons name="receipt" size={64} color={theme.border} />
+              <Text style={styles.emptyStateText}>No transactions found</Text>
+              <Text style={styles.emptyStateSubtext}>Try adjusting your filters</Text>
+            </View>
+          )}
+        </ScrollView>
+      )}
+    </SafeAreaView>
   );
 }
 
 const getStyles = (theme: typeof colors.light) => StyleSheet.create({
-  container: {
-    paddingTop: 25,
-    flex: 1,
-    backgroundColor: theme.background,
-  },
+  container: { paddingTop: 25, flex: 1, backgroundColor: theme.background },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 16,
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: 20, paddingTop: 20, paddingBottom: 16,
   },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: theme.text,
-  },
+  headerTitle: { fontSize: 28, fontWeight: '700', color: theme.text },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 12 },
+  loadingText: { color: theme.textSecondary, fontSize: 14 },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: theme.card,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: theme.border,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 1,
+    flexDirection: 'row', alignItems: 'center', marginHorizontal: 20, marginBottom: 16,
+    paddingHorizontal: 16, paddingVertical: 12, backgroundColor: theme.card,
+    borderRadius: 16, borderWidth: 1, borderColor: theme.border,
+    shadowColor: '#000', shadowOpacity: 0.04, shadowRadius: 4, elevation: 1,
   },
-  searchIcon: {
-    marginRight: 12,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: theme.text,
-  },
-  filterChipsContainer: {
-    marginBottom: 20,
-  },
-  filterChipsContent: {
-    paddingHorizontal: 20,
-    gap: 10,
-  },
+  searchIcon: { marginRight: 12 },
+  searchInput: { flex: 1, fontSize: 16, color: theme.text },
+  filterChipsContainer: { marginBottom: 20 },
+  filterChipsContent: { paddingHorizontal: 20, gap: 10 },
   filterChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 24,
-    backgroundColor: theme.iconSlateBg,
-    borderWidth: 1,
-    borderColor: theme.border,
+    paddingHorizontal: 16, paddingVertical: 10, borderRadius: 24,
+    backgroundColor: theme.iconSlateBg, borderWidth: 1, borderColor: theme.border,
   },
-  filterChipSelected: {
-    backgroundColor: theme.primary,
-    borderColor: theme.primary,
-  },
-  filterChipText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: theme.textSecondary,
-  },
-  filterChipTextSelected: {
-    color: theme.buttonText,
-  },
-  listContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
+  filterChipSelected: { backgroundColor: theme.primary, borderColor: theme.primary },
+  filterChipText: { fontSize: 14, fontWeight: '600', color: theme.textSecondary },
+  filterChipTextSelected: { color: theme.buttonText },
+  listContent: { paddingHorizontal: 20, paddingBottom: 20 },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 12,
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    marginTop: 20, marginBottom: 12,
   },
-  sectionLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: theme.textSecondary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  sectionTotal: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 80,
-  },
-  emptyStateText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: theme.text,
-    marginTop: 16,
-  },
-  emptyStateSubtext: {
-    fontSize: 14,
-    color: theme.textSecondary,
-    marginTop: 8,
-  },
+  sectionLabel: { fontSize: 14, fontWeight: '600', color: theme.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5 },
+  sectionTotal: { fontSize: 16, fontWeight: '700' },
+  emptyState: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 80 },
+  emptyStateText: { fontSize: 18, fontWeight: '600', color: theme.text, marginTop: 16 },
+  emptyStateSubtext: { fontSize: 14, color: theme.textSecondary, marginTop: 8 },
 });
